@@ -4,36 +4,56 @@ import { COLORS, SIZES, FONT } from "../constants/theme";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRouter } from "expo-router";
 
-const Login = () => {
+const Signup = () => {
   const [userName, setUserName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const router = useRouter();
 
-  const handleLogin = async () => {
-    if (!userName.trim()) {
-      Alert.alert("Validation", "Please enter your name.");
+  const handleSignup = async () => {
+    if (!userName.trim() || !email.trim() || !password.trim()) {
+      Alert.alert("Validation", "Please fill all fields.");
       return;
     }
-    await AsyncStorage.setItem("userDetails", JSON.stringify({ userName }));
+    // Simulate saving user data
+    await AsyncStorage.setItem("userDetails", JSON.stringify({ userName, email }));
     router.push("/home");
   };
 
   return (
     <View style={styles.container}>
       <Image source={require("../assets/icons/1_logo.png")} style={styles.logo} />
-      <Text style={styles.title}>Welcome Back!</Text>
-      <Text style={styles.subtitle}>Log in to continue your meditation journey</Text>
+      <Text style={styles.title}>Create Account</Text>
+      <Text style={styles.subtitle}>Sign up to start your meditation journey</Text>
       <TextInput
         style={styles.input}
-        placeholder="Enter your name"
+        placeholder="Name"
         value={userName}
         onChangeText={setUserName}
         placeholderTextColor={COLORS.gray}
       />
-      <TouchableOpacity style={styles.button} onPress={handleLogin}>
-        <Text style={styles.buttonText}>Login</Text>
+      <TextInput
+        style={styles.input}
+        placeholder="Email"
+        value={email}
+        onChangeText={setEmail}
+        placeholderTextColor={COLORS.gray}
+        keyboardType="email-address"
+        autoCapitalize="none"
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Password"
+        value={password}
+        onChangeText={setPassword}
+        placeholderTextColor={COLORS.gray}
+        secureTextEntry
+      />
+      <TouchableOpacity style={styles.button} onPress={handleSignup}>
+        <Text style={styles.buttonText}>Sign Up</Text>
       </TouchableOpacity>
-      <TouchableOpacity onPress={() => router.push("/signup")}>
-        <Text style={styles.signupText}>Don't have an account? Sign Up</Text>
+      <TouchableOpacity onPress={() => router.push("/login")}> 
+        <Text style={styles.signupText}>Already have an account? Login</Text>
       </TouchableOpacity>
     </View>
   );
@@ -98,4 +118,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Login;
+export default Signup;
