@@ -5,15 +5,19 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRouter } from "expo-router";
 
 const Login = () => {
-  const [userName, setUserName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
   const router = useRouter();
 
   const handleLogin = async () => {
-    if (!userName.trim()) {
-      Alert.alert("Validation", "Please enter your name.");
+    if (!email.trim() || !password.trim()) {
+      setError("Please enter both email and password.");
       return;
     }
-    await AsyncStorage.setItem("userDetails", JSON.stringify({ userName }));
+    setError("");
+    // Simulate login (replace with real authentication logic)
+    await AsyncStorage.setItem("userDetails", JSON.stringify({ email }));
     router.push("/home");
   };
 
@@ -22,17 +26,28 @@ const Login = () => {
       <Image source={require("../assets/icons/1_logo.png")} style={styles.logo} />
       <Text style={styles.title}>Welcome Back!</Text>
       <Text style={styles.subtitle}>Log in to continue your meditation journey</Text>
+      {error ? <Text style={styles.error}>{error}</Text> : null}
       <TextInput
         style={styles.input}
-        placeholder="Enter your name"
-        value={userName}
-        onChangeText={setUserName}
+        placeholder="Email"
+        value={email}
+        onChangeText={setEmail}
         placeholderTextColor={COLORS.gray}
+        keyboardType="email-address"
+        autoCapitalize="none"
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Password"
+        value={password}
+        onChangeText={setPassword}
+        placeholderTextColor={COLORS.gray}
+        secureTextEntry
       />
       <TouchableOpacity style={styles.button} onPress={handleLogin}>
         <Text style={styles.buttonText}>Login</Text>
       </TouchableOpacity>
-      <TouchableOpacity onPress={() => router.push("/signup")}>
+      <TouchableOpacity onPress={() => router.push("/signup")}> 
         <Text style={styles.signupText}>Don't have an account? Sign Up</Text>
       </TouchableOpacity>
     </View>
@@ -95,6 +110,13 @@ const styles = StyleSheet.create({
     fontSize: SIZES.medium,
     marginTop: SIZES.small,
     fontFamily: FONT.medium,
+  },
+  error: {
+    color: "red",
+    fontSize: SIZES.medium,
+    marginBottom: SIZES.small,
+    fontFamily: FONT.medium,
+    textAlign: "center",
   },
 });
 

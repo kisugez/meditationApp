@@ -8,14 +8,15 @@ const Signup = () => {
   const [userName, setUserName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
   const router = useRouter();
 
   const handleSignup = async () => {
     if (!userName.trim() || !email.trim() || !password.trim()) {
-      Alert.alert("Validation", "Please fill all fields.");
+      setError("Please fill all fields.");
       return;
     }
-    // Simulate saving user data
+    setError("");
     await AsyncStorage.setItem("userDetails", JSON.stringify({ userName, email }));
     router.push("/home");
   };
@@ -25,6 +26,7 @@ const Signup = () => {
       <Image source={require("../assets/icons/1_logo.png")} style={styles.logo} />
       <Text style={styles.title}>Create Account</Text>
       <Text style={styles.subtitle}>Sign up to start your meditation journey</Text>
+      {error ? <Text style={styles.error}>{error}</Text> : null}
       <TextInput
         style={styles.input}
         placeholder="Name"
@@ -84,6 +86,13 @@ const styles = StyleSheet.create({
     color: COLORS.gray,
     marginBottom: SIZES.large,
     fontFamily: FONT.regular,
+    textAlign: "center",
+  },
+  error: {
+    color: "red",
+    fontSize: SIZES.medium,
+    marginBottom: SIZES.small,
+    fontFamily: FONT.medium,
     textAlign: "center",
   },
   input: {
